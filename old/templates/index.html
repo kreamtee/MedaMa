@@ -1,0 +1,79 @@
+<html lang="ko">
+    <head>
+        <link rel="shortcut icon" href="/static/favicon.ico">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
+        <title>MedaMa</title>
+    </head>
+
+    <body>
+    <div class="container mx-auto px-4">
+        <main role="main" class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {% for gal in galList %}
+            <div class="gallery-content flex flex-col h-full bg-white rounded shadow">
+                <a target="_blank" href="/view/{{gal['id']}}">
+                    <img src="/image/{{gal['id']}}/1" class="w-full object-cover"/>
+                </a>
+                <span class="mt-2 px-2 pb-2 flex-grow">
+                    <h5 class="font-bold text-xl">
+                        {{gal['id']}} - {{gal['name']}}
+                    </h5>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Type:</td>
+                                <td>{{gal['type']}}</td>
+                            </tr>
+                            <tr>
+                                <td>Date:</td>
+                                <td>{{gal['date']}}</td>
+                            </tr>
+                            <tr>
+                                <td>Tag:</td>
+                                <td class="flex flex-wrap">
+                                    {% for tag in gal['tag'] %} {% if 'female' in tag %}
+                                    <a href="/tag/{{tag}}" class="py-1 px-2 border-2 border-red-500 text-red-500 rounded m-1 inline-block" role="button">{{tag}}</a>
+                                    {% elif 'male' in tag %}
+                                    <a href="/tag/{{tag}}" class="py-1 px-2 border-2 border-blue-500 text-blue-500 rounded m-1 inline-block" role="button">{{tag}}</a>
+                                    {% else %}
+                                    <a href="/tag/{{tag}}" class="py-1 px-2 border-2 border-gray-500 text-gray-500 rounded m-1 inline-block" role="button">{{tag}}</a>
+                                    {% endif %} {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </span>
+                <a href="/download/{{gal['id']}}" class="btn btn-default py-1 px-2 border-2 border-gray-500 text-gray-500 rounded m-2 self-center" role="button">
+                    Download
+                </a>
+            </div>
+            {% endfor %}
+        </main>
+       <nav aria-label="Page navigation" class="my-8 flex items-center justify-center">
+       <ul class="pagination grid grid-flow-col gap-2 auto-cols-min">
+        {% if page < 3 %}
+        {% for i in range(1, 6) %}
+        <li>
+            <a class="px-3 py-1 text-sm {{ 'bg-blue-500 text-white' if i == page else 'bg-gray-200' }} rounded-md" href="?page={{i}}">{{i}}</a>
+        </li>
+        {% endfor %}
+        {% else %}
+        {% for i in range(page-2, page+3) %}
+        <li>
+            <a class="px-3 py-1 text-sm {{ 'bg-blue-500 text-white' if i == page else 'bg-gray-200' }} rounded-md" href="?page={{i}}">{{i}}</a>
+        </li>
+        {% endfor %}
+        {% endif %}
+    </ul>
+</nav>
+
+
+        </div>
+        <script>
+            if(window.location.search.substr(1) == ''){
+                alert('시범용 미러사이트입니다. 본 서비스는 원 사이트에의 부분 프록시를 제공하여 서버에는 요청과 응답이 남아있지 않습니다. 서비스 제공자는 콘텐츠 자체 제공에 대한 책임이 없습니다.');
+            }
+        </script>
+    </body>
+</html>

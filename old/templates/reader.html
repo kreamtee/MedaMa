@@ -1,0 +1,109 @@
+<html lang="ko">
+    <head>
+        <link rel="shortcut icon" href="/static/favicon.ico">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+        <link rel="stylesheet" href="/static/hiyobi.css" />
+        <title>MedaMa</title>
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+            <a class="navbar-brand">
+                {{ data['name'] }}
+            </a>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a id="load">0/0</a>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="wid">Width</button>
+                <a>&nbsp;&nbsp;</a>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="hei">Height</button>
+            </div>
+        </nav>
+        {% for index in range(1,data['files']|length+1) %}
+        <div style="text-align: center;" id="img{{index}}">
+            <img src="/image/{{data['id']}}/{{index}}" class="image" style="height: 100vh;" />
+            <h5>Page {{index}}</h5>
+            <br />
+        </div>
+        {% endfor %}
+        <button style="position: fixed; right: 30px; bottom: 30px; z-index: 10000;" id="next_btn">&gt;</button>
+        <button style="position: fixed; left: 30px; bottom: 30px; z-index: 10000;" id="prev_btn">&lt;</button>
+        <script>
+            const count = {{ data['files']|length }};
+            var load = 0;
+            loade = document.getElementById('load');
+            loade.innerHTML = load+'/'+count;
+
+            function update(){
+                loade.innerHTML = load+'/'+count;
+            }
+
+            function setVH(){
+                images = document.getElementsByClassName('image');
+                for(var i=0; i<images.length; i++){
+                    var image = images[i];
+                    image.style.height = '100vh';
+                    image.style.width = '';
+                }
+            }
+
+            function setVW(){
+                images = document.getElementsByClassName('image');
+                for(var i=0; i<images.length; i++){
+                    var image = images[i];
+                    image.style.height = '';
+                    image.style.width = '100vw';
+                }
+            }
+
+            document.getElementById('wid').onclick = setVW;
+            document.getElementById('hei').onclick = setVH;
+
+            var images = document.getElementsByClassName('image');
+            for(var i=0; i<images.length; i++){
+                var image = images[i];
+                image.onload = function(){
+                load++;
+                update();
+                }
+            }
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                setVW(); // Call setVW function if the device is a mobile
+            }
+
+            var page = 1;
+            window.onkeydown = function(e){
+                switch(e.which) {
+                    case 37: // left
+                        if(page>1){
+                        page--;
+                        console.log("Prev Page " + page)
+                        document.getElementById('img'+page).scrollIntoView();
+                        }
+                        break;
+                    case 39: // left
+                        if(page<{{ data['files']|length }}){
+                        page++;
+                        console.log("Next Page " + page)
+                        document.getElementById('img'+page).scrollIntoView();
+                        }
+                        break;
+                }
+            };
+            document.getElementById('prev_btn').onclick = function(){if(page>1){page--;document.getElementById('img'+page).scrollIntoView();}};
+            document.getElementById('next_btn').onclick = function(){if(page<{{ data['files']|length -1}}){page++;document.getElementById('img'+page).scrollIntoView();}};
+        </script>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>
